@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCOD Risk Assessment - OvaCare</title>
+  <style>
+    html { scroll-behavior: smooth; }
+     html {
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('assets/bg5.png');
+      background-size: cover; background-position: center;
+      overflow-y: auto; transition: opacity .3s;
+      display: flex; justify-content: center; padding: 20px 0;
+      align-items: center;
+      min-height: 100vh;
+    }
+    body.fade-in { opacity: 1; }
+    body.fade-out { opacity: 0; }
+
+    .container {
+      background: rgba(255, 255, 255, 0.2); 
+      backdrop-filter: blur(1px); 
+      border: 2px solid white;
+      border-radius: 30px;
+      padding: 30px;
+      max-width: 500px; width: 90%;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    h2 { color: #5C2D91; text-align: center; margin-bottom: 20px; }
+    label { display: block; margin-top: 15px; font-weight: 500; }
+    select, input[type="number"] {
+      width: 100%; padding: 10px; margin-top:5px;
+      border-radius: 15px; border:1px solid #ccc; font-size:16px;
+    }
+    button {
+      margin-top:20px; width:100%; padding:12px;
+      border:none; border-radius:20px; background:#5C2D91;
+      color:white; font-size:16px; cursor:pointer;
+      transition: background .2s;
+    }
+    button:hover { background:#4b1e7a; }
+
+    /* Loader */
+    #loader {
+      display: none;
+      margin: 20px auto;
+      width: 60px; height: 60px;
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #5C2D91;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* Gauge */
+    #gaugeSection {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .gauge {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+    .gauge svg {
+      transform: rotate(-90deg);
+      width: 100%; height: 100%;
+    }
+    .gauge circle.bg {
+      fill: none;
+      stroke: #eee;
+      stroke-width: 15;
+    }
+    .gauge circle.fg {
+      fill: none;
+      stroke: #5C2D91;
+      stroke-width: 15;
+      stroke-linecap: round;
+      stroke-dasharray: 439.8;
+      stroke-dashoffset: 439.8;
+      transition: stroke-dashoffset 1s ease;
+    }
+    .gauge .label {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      color: #333;
+    }
+    #riskLevel { font-weight: bold; font-size: 20px; }
+    #riskPercent { font-size: 16px; color: #666; }
+
+    /* Suggestions */
+    #suggestions {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+      color: #333;
+    }
+    #tipsList {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    #tipsList li {
+      margin-bottom: 10px;
+    }
+
+    /* Back button */
+    #backButtonSection {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body class="fade-out">
+  <div class="container">
+    <h2>PCOD Risk Assessment</h2>
+    <div id="formSection">
+      <form id="pcodForm">
+        <label>Are your periods irregular?</label>
+        <select id="irregularPeriods"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Unexpected weight gain?</label>
+        <select id="weightGain"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Frequent acne?</label>
+        <select id="acne"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Excess facial/body hair?</label>
+        <select id="hairGrowth"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Increased abdominal fat?</label>
+        <select id="abdominalFat"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Hair loss?</label>
+        <select id="hairLoss"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Consume junk food?</label>
+        <select id="junkFood"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Family history of PCOD/PCOS?</label>
+        <select id="genetic"><option value="yes">Yes</option><option value="no">No</option></select>
+        <label>Enter your age</label>
+        <input type="number" id="age" min="1" placeholder="e.g., 25">
+        <label>Enter your weight (kg)</label>
+        <input type="number" id="weight" min="1" placeholder="e.g., 60">
+        <button type="submit">Check Risk</button>
+        <a href="dashboard.html"><button type="button">Back</button></a>
+      </form>
+    </div>
+    <div id="loader"></div>
+    <div id="gaugeSection">
+      <div class="gauge">
+        <svg viewBox="0 0 180 180">
+          <circle class="bg" cx="90" cy="90" r="70"></circle>
+          <circle class="fg" cx="90" cy="90" r="70"></circle>
+        </svg>
+        <div class="label">
+          <div id="riskLevel">Risk Level</div>
+          <div id="riskPercent">0%</div>
+        </div>
+      </div>
+    </div>
+    <!-- Suggestions Section -->
+    <div id="suggestions">
+      <h3>What You Can Do</h3>
+      <ul id="tipsList"></ul>
+    </div>
+
+    <!-- Back Button Section -->
+    <div id="backButtonSection">
+      <button onclick="window.location.reload();">Back to Form</button>
+    </div>
+  </div>
+
+  <script>
+    function animatePercentage(el, start, end, duration) {
+      let current = start;
+      const step = end > start ? 1 : -1;
+      const incrementTime = (duration * 1000) / Math.abs(end - start);
+      const timer = setInterval(() => {
+        current += step;
+        el.textContent = current + '%';
+        if (current === end) clearInterval(timer);
+      }, incrementTime);
+    }
+
+    window.onload = () => document.body.classList.replace('fade-out', 'fade-in');
+
+    document.getElementById('pcodForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      document.getElementById('formSection').style.display = 'none';
+      const loader = document.getElementById('loader');
+      const gaugeSection = document.getElementById('gaugeSection');
+      loader.style.display = 'block';
+
+      const fields = ['irregularPeriods','weightGain','acne','hairGrowth','abdominalFat','hairLoss','junkFood','genetic'];
+      let score = 0; fields.forEach(id => { if (document.getElementById(id).value === 'yes') score++; });
+      const age = parseInt(document.getElementById('age').value) || 0;
+      const wt = parseInt(document.getElementById('weight').value) || 0;
+      if (age > 30) score++; if (wt > 70) score++;
+
+      let level = 'Low', color = '#28a745', pct = 33;
+      if (score <= 3) { level = 'Low'; color = '#28a745'; pct = 33; }
+      else if (score <= 6) { level = 'Medium'; color = '#ffcc00'; pct = 66; }
+      else { level = 'High'; color = '#dc3545'; pct = 100; }
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+        gaugeSection.style.display = 'flex';
+        const fg = document.querySelector('.gauge circle.fg');
+        const circumference = 2 * Math.PI * 70;
+        fg.style.stroke = color;
+        fg.style.strokeDasharray = circumference;
+        fg.style.strokeDashoffset = circumference * (1 - pct / 100);
+
+        document.getElementById('riskLevel').textContent = level + ' Risk';
+        animatePercentage(document.getElementById('riskPercent'), 0, pct, 2);
+
+        // Suggestions based on risk level
+        const suggestions = document.getElementById('suggestions');
+        const tipsList = document.getElementById('tipsList');
+        tipsList.innerHTML = ''; // clear old tips
+
+        let tipItems = [];
+        if (level === 'Low') {
+          tipItems = [
+            "✅ Maintain a balanced diet with whole grains and vegetables.",
+            "✅ Keep up regular physical activity (30 mins/day).",
+            "✅ Get 7–8 hours of quality sleep.",
+            "🚫 Avoid excessive sugar and processed foods.",
+          ];
+        } else if (level === 'Medium') {
+          tipItems = [
+            "✅ Monitor your cycle using a period tracker.",
+            "✅ Reduce intake of junk food and sugary beverages.",
+            "✅ Start light exercise like yoga or walking daily.",
+            "🚫 Limit screen time before bed and reduce stress.",
+          ];
+        } else if (level === 'High') {
+          tipItems = [
+            "✅ Consult a gynecologist for further diagnosis.",
+            "✅ Adopt a low-carb diet and reduce saturated fats.",
+            "✅ Prioritize weight management through guided fitness.",
+            "🚫 Don’t ignore symptoms like irregular periods or hair loss.",
+          ];
+        }
+
+        tipItems.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          tipsList.appendChild(li);
+        });
+
+        suggestions.style.display = 'block';
+        document.getElementById('backButtonSection').style.display = 'block';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

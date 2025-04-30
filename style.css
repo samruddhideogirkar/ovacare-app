@@ -1,0 +1,332 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100%;
+}
+
+.background {
+  background-image: url("assets/bg2.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Added for mobile spacing */
+}
+
+.card {
+  background-color: white;
+  border-radius: 30px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.brand {
+  font-size: 28px;
+  color: #5C2D91;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.description {
+  font-size: 16px;
+  color: gray;
+  margin: 10px 0 20px;
+}
+
+.test-btn {
+  display: inline-block;
+  background-color: #5C2D91;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.test-btn:hover {
+  background-color: #4A1C7F;
+}
+
+.switch-link {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* Login/Signup forms */
+.form-screen {
+  background-color: #F5E9F2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.form-screen h2 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form input {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+form button {
+  background-color: #5C2D91;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #4A1C7F;
+}
+
+/* ============================= */
+/* 📱 Media Queries for Responsive Design */
+/* ============================= */
+
+/* Tablets (768px and below) */
+/* @media (max-width: 768px) {
+  .card {
+    padding: 20px;
+    max-width: 90%;
+  }
+
+  .brand {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
+
+  .test-btn {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .form-screen h2 {
+    font-size: 26px;
+  }
+} */
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .background {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .brand {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .test-btn {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  .switch-link {
+    font-size: 12px;
+  }
+
+  .form-screen h2 {
+    font-size: 24px;
+  }
+
+  form input {
+    font-size: 14px;
+  }
+
+  form button {
+    font-size: 14px;
+  }
+}
+@media (max-width: 600px) {
+  .card {
+    width: 90%;
+    padding: 16px;
+  }
+
+  .brand {
+    font-size: 1.5em;
+  }
+
+  .subtitle {
+    font-size: 0.95em;
+  }
+
+  .test-btn {
+    width: 80%;
+    padding: 10px 20px;
+  }
+}
+
+
+/* body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100%;
+}
+
+.background {
+  background-image: url("assets/background.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background-color: white;
+  border-radius: 30px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.brand {
+  font-size: 28px;
+  color: #5C2D91;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.description {
+  font-size: 16px;
+  color: gray;
+  margin: 10px 0 20px;
+}
+
+.test-btn {
+  display: inline-block;
+  background-color: #5C2D91;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.switch-link {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* Login/Signup forms */
+.form-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  
+}
+
+.form-screen h2 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form input {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+form button {
+  background-color: #5C2D91;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+} 

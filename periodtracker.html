@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OvaCare Period Tracker</title>
+  <style>
+     html {
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('assets/bg4.png');
+      background-size: cover;
+      background-position: center;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh;
+      transition: opacity 0.3s ease;
+      opacity: 1;
+    }
+    body.fade-out { opacity: 0; }
+    body.fade-in { opacity: 1; }
+
+    .container {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(1px); 
+      border: 2px solid white;
+      /* -webkit-backdrop-filter: blur(10px); 
+       */
+      border-radius: 30px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 { color: #5C2D91; margin-bottom: 20px; }
+    .inputs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .inputs label {
+      display: flex; flex-direction: column;
+      font-size: 14px; color: #333;
+      text-align: left;
+      width: calc(50% - 10px);
+    }
+    .inputs input { padding: 8px; border: 1px solid #ccc; border-radius: 10px; font-size: 14px; }
+    .inputs button {
+      background-color: #5C2D91; color: white;
+      border: none; border-radius: 20px;
+      padding: 10px 20px; font-size: 16px;
+      cursor: pointer; transition: background-color 0.2s;
+      margin-top: 16px;
+      width: 100%;
+    }
+    .inputs button:hover { background-color: #4b1e7a; }
+
+    #upcoming { text-align: left; margin-bottom: 20px; }
+    #upcoming h3 { margin-bottom: 10px; color: #5C2D91; }
+    #upcoming ul { list-style: none; padding: 0; }
+    #upcoming li { margin-bottom: 5px; color: #333; }
+
+    #calendar { overflow-x: auto; }
+    .month {
+      margin-bottom: 30px;
+    }
+    .month-name { font-size: 20px; color: #5C2D91; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      width: 14.28%; padding: 8px;
+      text-align: center;
+      border: 1px solid #eee;
+    }
+    th { background-color: rgba(92,45,145,0.1); color: #5C2D91; }
+    td.period-day { background-color: #f3dfff; color: #5C2D91; border-radius: 50%; }
+    td.today { outline: 2px solid #5C2D91; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Period Tracker</h2>
+    <div class="inputs">
+      <label>Last Period Date:<input type="date" id="lastPeriod"></label>
+      <label>Cycle Length (days):<input type="number" id="cycleLength" value="28" min="21" max="40"></label>
+      <label>Period Length (days):<input type="number" id="periodLength" value="5" min="1" max="10"></label>
+      <label>Months to Show:<input type="number" id="monthsToShow" value="3" min="1" max="6"></label>
+      <button onclick="generateTracker()">Show Calendar</button>
+       <a href="dashboard.html"><button type="button">Back</button></a>
+    </div>
+    <div id="upcoming"></div>
+    <div id="calendar"></div>
+  </div>
+
+  <script>
+    function generateTracker() {
+      const last = document.getElementById('lastPeriod').value;
+      if (!last) return alert('Please select last period date.');
+      const cycle = parseInt(document.getElementById('cycleLength').value);
+      const length = parseInt(document.getElementById('periodLength').value);
+      const months = parseInt(document.getElementById('monthsToShow').value);
+      const lastDate = new Date(last);
+
+      // upcoming starts
+      const upcomingDates = [];
+      for (let i = 1; i <= months; i++) {
+        const d = new Date(lastDate);
+        d.setDate(d.getDate() + cycle * i);
+        upcomingDates.push(d);
+      }
+      const ul = document.createElement('ul');
+      upcomingDates.forEach(d => {
+        const li = document.createElement('li');
+        li.textContent = d.toDateString();
+        ul.appendChild(li);
+      });
+      document.getElementById('upcoming').innerHTML = '<h3>Upcoming Period Start Dates:</h3>';
+      document.getElementById('upcoming').appendChild(ul);
+
+      // compute period days set
+      const periodDays = new Set();
+      for (let i = 0; i <= months; i++) {
+        const start = new Date(lastDate);
+        start.setDate(start.getDate() + cycle * i);
+        for (let j = 0; j < length; j++) {
+          const d = new Date(start);
+          d.setDate(d.getDate() + j);
+          periodDays.add(d.toDateString());
+        }
+      }
+
+      // render calendar
+      const calDiv = document.getElementById('calendar');
+      calDiv.innerHTML = '';
+      for (let m = 0; m < months; m++) {
+        const monthDate = new Date(lastDate.getFullYear(), lastDate.getMonth() + m, 1);
+        const monthName = monthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+        const monthDiv = document.createElement('div');
+        monthDiv.className = 'month';
+        monthDiv.innerHTML = `<div class="month-name">${monthName}</div>`;
+
+        const tbl = document.createElement('table');
+        const header = document.createElement('tr');
+        ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(day => {
+          const th = document.createElement('th'); th.textContent = day; header.appendChild(th);
+        });
+        tbl.appendChild(header);
+
+        let row = document.createElement('tr');
+        // empty cells
+        for (let i = 0; i < monthDate.getDay(); i++) {
+          row.appendChild(document.createElement('td'));
+        }
+        const days = new Date(monthDate.getFullYear(), monthDate.getMonth()+1, 0).getDate();
+        for (let d = 1; d <= days; d++) {
+          const cell = document.createElement('td');
+          const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), d);
+          const ds = date.toDateString();
+          cell.textContent = d;
+          if (periodDays.has(ds)) cell.classList.add('period-day');
+          if (new Date().toDateString() === ds) cell.classList.add('today');
+          row.appendChild(cell);
+          if (date.getDay() === 6 && d !== days) {
+            tbl.appendChild(row);
+            row = document.createElement('tr');
+          }
+        }
+        // fill trailing
+        while (row.children.length < 7) row.appendChild(document.createElement('td'));
+        tbl.appendChild(row);
+        monthDiv.appendChild(tbl);
+        calDiv.appendChild(monthDiv);
+      }
+    }
+
+    window.onload = () => document.body.classList.add('fade-in');
+  </script>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Period Tracker - OvaCare</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      background-image: url('assets/background.png');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s ease-in-out;
+      opacity: 1;
+    }
+    body.fade-out { opacity: 0; }
+    body.fade-in { opacity: 1; }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 30px;
+      padding: 30px 20px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h2 {
+      color: #5C2D91;
+      margin-bottom: 20px;
+    }
+
+    input[type="date"], input[type="month"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #5C2D91;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background-color 0.2s ease;
+    }
+    button:hover { background-color: #4b1e7a; }
+
+    .upcoming {
+      text-align: left;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .calendar-container {
+      overflow-x: auto;
+    }
+    .calendar-container table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .calendar-container th,
+    .calendar-container td {
+      width: 14.28%;
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .calendar-container td.highlight {
+      background-color: #5C2D91;
+      color: white;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Period Tracker</h2>
+    <input type="date" id="lastPeriod" />
+    <button onclick="updateTracker()">Predict Upcoming</button>
+    <div class="upcoming" id="upcoming"></div>
+    <label for="monthPicker">View Month</label>
+    <input type="month" id="monthPicker" />
+    <div class="calendar-container" id="calendar"></div>
+  </div>
+
+  <script>
+    let predictedDates = [];
+    function updateTracker() {
+      const val = document.getElementById('lastPeriod').value;
+      const last = new Date(val);
+      if (!val || isNaN(last)) {
+        document.getElementById('upcoming').textContent = 'Please select a valid date.';
+        return;
+      }
+      predictedDates = [];
+      for (let i = 1; i <= 4; i++) {
+        const d = new Date(last);
+        d.setDate(d.getDate() + 28 * i);
+        predictedDates.push(d);
+      }
+      document.getElementById('upcoming').innerHTML = '<strong>Upcoming Period Start Dates:</strong><ul>' +
+        predictedDates.map(d => '<li>' + d.toDateString() + '</li>').join('') + '</ul>';
+      const now = new Date();
+      const picker = document.getElementById('monthPicker');
+      picker.value = now.toISOString().slice(0, 7);
+      renderCalendar(now.getFullYear(), now.getMonth());
+    }
+
+    document.getElementById('monthPicker').addEventListener('change', function () {
+      const [y, m] = this.value.split('-').map(Number);
+      renderCalendar(y, m - 1);
+    });
+
+    function renderCalendar(year, month) {
+      const calEl = document.getElementById('calendar');
+      calEl.innerHTML = '';
+      const table = document.createElement('table');
+      const header = document.createElement('tr');
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+        const th = document.createElement('th'); th.textContent = day; header.appendChild(th);
+      });
+      table.appendChild(header);
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      let row = document.createElement('tr');
+      for (let i = 0; i < firstDay; i++) row.appendChild(document.createElement('td'));
+      for (let day = 1; day <= daysInMonth; day++) {
+        if ((firstDay + day - 1) % 7 === 0 && day !== 1) {
+          table.appendChild(row);
+          row = document.createElement('tr');
+        }
+        const cell = document.createElement('td');
+        cell.textContent = day;
+        predictedDates.forEach(d => {
+          if (d.getFullYear() === year && d.getMonth() === month && d.getDate() === day) {
+            cell.classList.add('highlight');
+          }
+        });
+        row.appendChild(cell);
+      }
+      while (row.children.length < 7) row.appendChild(document.createElement('td'));
+      table.appendChild(row);
+      calEl.appendChild(table);
+    }
+
+    window.onload = () => {
+      document.body.classList.add('fade-in');
+      document.getElementById('monthPicker').value = new Date().toISOString().slice(0, 7);
+      renderCalendar(new Date().getFullYear(), new Date().getMonth());
+    };
+  </script>
+</body>
+</html> -->

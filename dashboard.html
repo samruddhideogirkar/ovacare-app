@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OvaCare Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <script>
+    window.onload = () => {
+      document.body.classList.add('fade-in');
+  
+      window.navigateTo = function (page) {
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = page;
+        }, 300);
+      };
+    };
+  </script>
+  
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-box">
+      <img src="assets/logo.png" alt="OvaCare Logo" class="logo" />
+      <h1>Welcome to OvaCare</h1>
+      <p>Select a feature below:</p>
+      <div class="btn-group">
+        <button onclick="navigateTo('periodtracker.html')" class="ui-button">Period Tracker</button>
+<button onclick="navigateTo('pcod-test.html')" class="ui-button">PCOD Risk Prediction</button>
+<!-- <button onclick="logout()" class="ui-button">Logout</button> -->
+<button onclick="exitApp()" class="ui-button">Exit App</button>
+
+        <!-- <button onclick="goTo('period-tracker.html')">Period Tracker</button>
+        <button onclick="goTo('pcod-test.html')">PCOD Risk Prediction</button> -->
+      </div>
+    </div>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+</html>
+

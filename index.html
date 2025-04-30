@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=no" />
+  <title>OvaCare - Home</title>
+  <style>
+    body {font-family: 'Segoe UI', sans-serif; margin:0; padding:0; background: url('assets/bg2.png') center center /cover no-repeat; display:flex; justify-content:center; align-items:center; height:100vh;}
+    .card {
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(1px); 
+  border: 2px solid white;
+  /* -webkit-backdrop-filter: blur(10px);  */
+  border-radius: 15px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: #fff;;
+  overflow-y: auto;
+  
+  }
+
+    /* .card {background:rgb(255, 255, 255); border-radius:15px; padding:20px; width:90%; max-width:400px; box-shadow:0 4px 12px rgba(0,0,0,0.1); overflow-y:auto;} */
+    /* .logo {display:inline; margin:0 auto 10px; width:80px;}
+    .brand {text-align:center; color:#5C2D91; font-size:1.8em; margin:0 0 10px;} */
+    .brand-header {
+  display: flex;
+  align-items: center;     /* vertically center logo and text */
+  justify-content: center; /* horizontally center the whole block */
+  gap: 10px;               /* space between logo and text */
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 70px; /* smaller size to align better */
+  height: 70px;
+}
+
+.brand {
+  font-size: 1.8em;
+  color: #5C2D91;
+  margin: 0;
+}
+
+    .subtitle {text-align:center; color:#976e97; font-size:1em; margin:0 0 15px;}
+    .test-btn {display:block; margin:10px auto; background:#5C2D91; color:#fff; padding:12px 24px; border-radius:25px; text-decoration:none; text-align:center; width:60%;}
+    .switch-link {text-align:center; font-size:0.85em; margin-bottom:15px;}
+    .switch-link a {color:#5C2D91; text-decoration:none;}
+    .info {font-size:0.9em; color:#444; line-height:1.4; margin-top:10px;}
+    .info h4 {color:#5C2D91; margin:8px 0 4px; font-size:1em;}
+    .info p {margin:0 0 6px;}
+  </style>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+</head>
+<body>
+  <div class="card">
+    <div class="brand-header">
+      <img src="assets/logo.png" class="logo" alt="Logo" />
+      <h1 class="brand">OvaCare</h1>
+    </div>
+    
+    
+    <!-- <img src="assets/logo.png" class="logo" alt="Logo" />
+    <h1 class="brand">OvaCare</h1> -->
+    <h2 class="subtitle">Your health, your care - Ovacare</h2>
+    <br>
+    <a href="login.html" class="test-btn">Get started!</a>
+    <br>
+    <!-- <p class="switch-link">Already have an account? <a href="login.html">Login</a> | <a href="signup.html">Signup</a></p> -->
+    <div class="info">
+      <h4>About PCOD/PCOS</h4>
+      <p>PCOD/PCOS is a hormonal disorder affecting 1 in 10 women of reproductive age.</p>
+      <p>Common signs: irregular cycles, acne, excess hair growth, weight gain.</p>
+      <p>Causes include genetics, insulin resistance, and hormonal imbalance.</p>
+      <p>Diagnosis: blood tests, ultrasound, and menstrual history.</p>
+      <p>Management: healthy diet, regular exercise, medications to regulate hormones.</p>
+      <p>Early detection reduces risks like infertility, diabetes, and heart disease.</p>
+    </div>
+  </div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('service-worker.js')
+        .then(function (registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function (error) {
+          console.log('Service Worker registration failed:', error);
+        });
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+      .then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service Worker registration failed:', error);
+      });
+    }
+  </script>
+  
+  <!-- <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+          }, function(err) {
+            console.log('Service Worker registration failed:', err);
+          });
+      });
+    }
+  </script> -->
+  
+  
+  
+</body>
+</html>
